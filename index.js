@@ -21,20 +21,24 @@ app.get('/getign', async (req, res) => {
       }),
       {
         headers: {
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
           'Origin': 'https://www.codashop.com',
           'Referer': 'https://www.codashop.com/en-ph/mobile-legends-bang-bang',
-          'Accept': 'application/json',
+          'Accept': 'application/json, text/plain, */*',
+          'Accept-Language': 'en-PH,en;q=0.9',
           'Content-Type': 'application/x-www-form-urlencoded'
         }
       }
     );
-    const data = response.data;
-    const username = (data.confirmationFields && data.confirmationFields.username)
-      || data.username || data.nickname || 'Not found';
-    res.json({ username });
+
+    // Send back full raw response so we can see exactly what Codashop returns
+    console.log("STATUS:", response.status);
+    console.log("DATA:", JSON.stringify(response.data));
+    res.json({ raw: response.data });
+
   } catch (e) {
-    res.json({ error: e.message });
+    console.log("ERROR:", e.message);
+    res.json({ error: e.message, details: e.response ? e.response.data : null });
   }
 });
 
